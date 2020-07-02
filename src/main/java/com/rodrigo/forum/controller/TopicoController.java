@@ -1,6 +1,7 @@
 package com.rodrigo.forum.controller;
 
 import com.rodrigo.forum.model.Topico;
+import com.rodrigo.forum.model.dto.DetalhesDoTopicoDTO;
 import com.rodrigo.forum.model.dto.TopicoDTO;
 import com.rodrigo.forum.model.form.TopicoForm;
 import com.rodrigo.forum.repository.CursoRepository;
@@ -32,6 +33,12 @@ public class TopicoController {
         }
         List<Topico> topicos = topicoRepository.findByCursoNome(nomeCurso);
         return TopicoDTO.converter(topicos);
+    }
+
+    @GetMapping("/{id}")
+    public DetalhesDoTopicoDTO detalhar(@PathVariable Long id) {
+        Topico topico = topicoRepository.findById(id).get();
+        return new DetalhesDoTopicoDTO(topico);
     }
 
     @PostMapping
