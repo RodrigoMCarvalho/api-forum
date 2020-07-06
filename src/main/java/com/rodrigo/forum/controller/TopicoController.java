@@ -8,14 +8,19 @@ import com.rodrigo.forum.model.form.TopicoForm;
 import com.rodrigo.forum.repository.CursoRepository;
 import com.rodrigo.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.*;
 
 @RestController
 @RequestMapping("/topicos")
@@ -28,12 +33,16 @@ public class TopicoController {
     private CursoRepository cursoRepository;
 
     @GetMapping
-    public List<TopicoDTO> lista(String nomeCurso) {
+    public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso,
+                                 @RequestParam int pagina,
+                                 @RequestParam int qtd,
+                                 @RequestParam String ordenacao) {
+        Pageable paginacao = PageRequest.of(pagina, qtd, Direction.ASC, ordenacao);
         if(nomeCurso == null) {
-            List<Topico> topicos = topicoRepository.findAll();
+            Page<Topico> topicos = topicoRepository.findAll(paginacao);
             return TopicoDTO.converter(topicos);
         }
-        List<Topico> topicos = topicoRepository.findByCursoNome(nomeCurso);
+        Page<Topico> topicos = topicoRepository.findByCursoNome(nomeCurso, paginacao);
         return TopicoDTO.converter(topicos);
     }
 
