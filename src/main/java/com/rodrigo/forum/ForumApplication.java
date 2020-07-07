@@ -2,10 +2,12 @@ package com.rodrigo.forum;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @SpringBootApplication
 @EnableSpringDataWebSupport  //para ativar o Pageable
+@EnableCaching
 public class ForumApplication {
 
 	public static void main(String[] args) {
