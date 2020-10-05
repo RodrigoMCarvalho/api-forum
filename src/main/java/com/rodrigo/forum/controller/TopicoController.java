@@ -3,7 +3,7 @@ package com.rodrigo.forum.controller;
 import com.rodrigo.forum.model.Topico;
 import com.rodrigo.forum.model.dto.DetalhesDoTopicoDTO;
 import com.rodrigo.forum.model.dto.TopicoDTO;
-import com.rodrigo.forum.model.form.AtualizacapTopicoForm;
+import com.rodrigo.forum.model.form.AtualizacaoTopicoForm;
 import com.rodrigo.forum.model.form.TopicoForm;
 import com.rodrigo.forum.repository.CursoRepository;
 import com.rodrigo.forum.repository.TopicoRepository;
@@ -67,7 +67,7 @@ public class TopicoController {
 
     @PutMapping("/{id}")
     @CacheEvict(value = "listaDeTopicos", allEntries = true)
-    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacapTopicoForm form) {
+    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form) {
         Optional<Topico> topicoOpt = topicoRepository.findById(id);
         if(!topicoOpt.isPresent()) {
             return ResponseEntity.notFound().build();

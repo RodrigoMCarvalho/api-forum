@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class AtualizacapTopicoForm {
+public class AtualizacaoTopicoForm {
 
     @NotNull
     @NotEmpty
