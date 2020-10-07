@@ -30,7 +30,7 @@ public class AutenticacaoControllerTest {
 
         mockMvc
             .perform(MockMvcRequestBuilders
-                    .post(uri)
+                    .post(uri) 
                     .content(json)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().is(400));
