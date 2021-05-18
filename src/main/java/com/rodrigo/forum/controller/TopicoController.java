@@ -13,15 +13,20 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/topicos")
@@ -44,6 +49,28 @@ public class TopicoController {
         }
         Page<Topico> topicos = topicoRepository.findByCursoNome(nomeCurso, paginacao);
         return TopicoDTO.converter(topicos);
+    }
+
+    @GetMapping("listar")
+    public ResponseEntity<List<TopicoDTO>> getAll() {
+        List<Topico> topicos = topicoRepository.findAll();
+        if(topicos.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        topicos.forEach(topico -> {
+            topico.add(linkTo(methodOn(TopicoController.class).getOneTopico(topico.getId())).withSelfRel());
+        });
+        return ResponseEntity.ok(topicos.stream().map(TopicoDTO::new).collect(Collectors.toList()));
+    }
+    
+    @GetMapping("listar/{id}")
+    public ResponseEntity<TopicoDTO> getOneTopico(@PathVariable Long id) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+        if(topico.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        topico.get().add(linkTo(methodOn(TopicoController.class).getAll()).withRel("Lista de tópicos"));
+        return ResponseEntity.ok(new TopicoDTO(topico.get()));
     }
 
     @GetMapping("/{id}")

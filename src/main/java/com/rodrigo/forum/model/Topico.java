@@ -1,12 +1,17 @@
 package com.rodrigo.forum.model;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Topico {
+public class Topico extends RepresentationModel<Topico> implements Serializable {
+
+	private static final long serialVersionUID = 1;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
