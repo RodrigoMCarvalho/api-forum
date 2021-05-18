@@ -55,19 +55,19 @@ public class TopicoController {
     public ResponseEntity<List<TopicoDTO>> getAll() {
         List<Topico> topicos = topicoRepository.findAll();
         if(topicos.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
         topicos.forEach(topico -> {
             topico.add(linkTo(methodOn(TopicoController.class).getOneTopico(topico.getId())).withSelfRel());
         });
         return ResponseEntity.ok(topicos.stream().map(TopicoDTO::new).collect(Collectors.toList()));
     }
-    
+
     @GetMapping("listar/{id}")
     public ResponseEntity<TopicoDTO> getOneTopico(@PathVariable Long id) {
         Optional<Topico> topico = topicoRepository.findById(id);
-        if(topico.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(!topico.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
         topico.get().add(linkTo(methodOn(TopicoController.class).getAll()).withRel("Lista de tópicos"));
         return ResponseEntity.ok(new TopicoDTO(topico.get()));
